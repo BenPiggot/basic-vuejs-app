@@ -9,7 +9,13 @@ const mutations = {
     state.stocks = stocks
   },
   'RND_STOCKS' (state) {
-
+    state.stocks = state.stocks.map(s => {
+      return {
+        id: s.id,
+        name: s.name,
+        price: s.price += (Math.random() < 0.5 ? -1 : 1) * Math.floor(Math.random() * 10)
+      }
+    })
   }
 }
 

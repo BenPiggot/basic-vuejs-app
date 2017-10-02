@@ -8,6 +8,10 @@ import { routes } from './routes'
 
 Vue.use(VueRouter)
 
+Vue.filter('currency', function(value) {
+  return '$' + value.toLocaleString();
+})
+
 const router = new VueRouter({
   routes: routes,
   mode: 'history'

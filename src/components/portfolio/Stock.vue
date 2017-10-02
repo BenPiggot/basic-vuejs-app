@@ -4,7 +4,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">
           {{ stock.name }}
-          <small>(Price: {{ stock.price }} | {{ stock.quantity }})</small>
+          <small>(Price: {{ stock.price | currency }} | {{ stock.quantity }})</small>
           
         </h3>
       </div>
@@ -15,14 +15,15 @@
             class="form-control"
             placeholder="Quantity"
             v-model.number="quantity"
+            :class="{danger: insufficientQuantity}"
           />
         </div>
         <div class="pull-right">
           <button 
             @click="sellStock"
             class="btn btn-success"
-            :disabled="quantity < 0">
-            Sell
+            :disabled="insufficientQuantity || quantity < 0">
+            {{ insufficientQuantity ? 'Not enough stock' : 'Sell' }}
           </button>
         </div>
       </div>
@@ -39,17 +40,17 @@
         quantity: 0
       }
     },
+    computed: {
+      insufficientQuantity() {
+        const record = this.$store.getters.stockPortfolio.find(s => s.id === this.stock.id)
+        return this.quantity > record.quantity
+      }
+    },
     methods: {
       ...mapActions({
         placeSellOrder: 'sellStock'
       }),
       sellStock() {
-        const record = this.$store.getters.stockPortfolio.find(s => s.id === this.stock.id)
-
-        if (this.quantity > record.quantity) {
-          alert("You cannot sell more stocks than you have")
-          return
-        }
         const order = {
           stockId: this.stock.id,
           stockPrice: this.stock.price,
@@ -61,3 +62,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .danger {
+    border: 1px solid red;
+  }
+</style>
