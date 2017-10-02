@@ -51,7 +51,7 @@
           return
         }
         const order = {
-          stockId: this.stock.id,
+          id: this.stock.id,
           stockPrice: this.stock.price,
           quantity: this.quantity
         }
